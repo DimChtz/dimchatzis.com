@@ -76,3 +76,7 @@ Create `.env.deploy` (see `.env.deploy.example`):
 - **Vite 5**
 - **qrcode** — QR code generation
 - No UI framework — custom CSS with CSS variables, JetBrains Mono / Outfit fonts
+
+## License
+
+MIT — see [LICENSE](LICENSE).
