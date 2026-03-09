@@ -612,6 +612,24 @@ export function useTerminal(cv, appRefs, themeApi) {
         line('  Run `npm run coffee` to say hi.'),
         line(''),
       ])
+    } else if (trimmed === 'projects' || trimmed.startsWith('projects ')) {
+      const filterMatch = trimmed.match(/projects\s+--filter\s+(npm|wordpress)/)
+      const filter = filterMatch ? filterMatch[1] : 'all'
+      appRefs.projectFilter.value = filter
+      nextTick(() => {
+        const el = mainRef.value?.querySelector?.('#projects')
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      })
+      const projects = (cv.projects || []).filter((p) => filter === 'all' || p.type === filter)
+      const lines = projects.length
+        ? [
+            line(`${filter === 'all' ? 'All' : filter === 'npm' ? 'NPM' : 'WordPress'} projects (${projects.length}):`),
+            ...projects.map((p) => line(`  • ${p.title} [${p.type}] — ${p.repo}`)),
+            line(''),
+            line('→ Scrolled to projects section.'),
+          ]
+        : [line('No projects found.'), line('→ Scrolled to projects section.')]
+      out(lines)
     } else if (trimmed === 'weather') {
       const lastEntry = commandHistory.value[commandHistory.value.length - 1]
       out([line('Fetching weather for Athens...')])

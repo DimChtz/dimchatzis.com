@@ -428,7 +428,7 @@ defineEmits(['toggleTheme'])
   border: none;
   border-radius: 0;
 }
-.hero-info-box .hero-links { margin-top: 0.75rem; }
+.hero-info-box .hero-links { margin-top: 1rem; }
 
 .terminal-scroll::-webkit-scrollbar { width: 8px; }
 .terminal-scroll::-webkit-scrollbar-track { background: var(--bg); border-radius: 4px; }
