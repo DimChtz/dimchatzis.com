@@ -131,21 +131,8 @@ export function useTerminal(cv, appRefs, themeApi) {
     })
   }
 
-  const isModalOpen = computed(
-    () =>
-      appRefs.showPlayPrompt.value ||
-      appRefs.buildGameOpen.value ||
-      appRefs.gameOpen.value ||
-      appRefs.calculatorOpen.value ||
-      appRefs.notepadOpen.value ||
-      appRefs.typingTestOpen.value ||
-      appRefs.encoderOpen.value ||
-      appRefs.qrcodeOpen.value ||
-      appRefs.pomodoroOpen.value ||
-      appRefs.colorPickerOpen.value ||
-      appRefs.stopwatchOpen.value ||
-      appRefs.passwordOpen.value ||
-      appRefs.duckOpen.value
+  const isModalOpen = computed(() =>
+    Object.entries(appRefs).some(([key, ref]) => key !== 'projectFilter' && ref?.value)
   )
 
   function formatPromptPath(path) {

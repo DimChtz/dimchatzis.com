@@ -1,5 +1,6 @@
 <script setup>
 import { dismissPlayPrompt } from '../utils/playPromptStorage'
+import WindowDots from './WindowDots.vue'
 
 const show = defineModel('show', { type: Boolean })
 const emit = defineEmits(['play'])
@@ -22,9 +23,7 @@ function onNo() {
       <div v-if="show" class="prompt-overlay" @click.self="onNo">
         <div class="prompt-box">
           <div class="prompt-bar">
-            <span class="prompt-dot red"></span>
-            <span class="prompt-dot yellow"></span>
-            <span class="prompt-dot green"></span>
+            <WindowDots />
             <span class="prompt-bar-title">hey there</span>
           </div>
           <div class="prompt-body">
@@ -73,15 +72,6 @@ function onNo() {
   font-size: 0.8rem;
   color: var(--text-muted);
 }
-
-.prompt-dot {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-}
-.prompt-dot.red { background: #ff5f56; }
-.prompt-dot.yellow { background: #ffbd2e; }
-.prompt-dot.green { background: #00ff88; }
 
 .prompt-bar-title {
   margin-left: 0.5rem;

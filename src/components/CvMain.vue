@@ -1,7 +1,7 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { computed } from 'vue'
 import { getFancyVersion } from '../utils/version'
-import { siteConfig } from '../config/site'
+import CvFooter from './CvFooter.vue'
 
 const props = defineProps({
   cv: { type: Object, required: true },
@@ -76,7 +76,7 @@ function copyInstall(pkg) {
           </div>
           <template v-if="!job.roles">
             <p class="role">{{ job.role }}</p>
-            <ul class="highlights">
+            <ul class="highlights list-arrow">
               <li v-for="h in job.highlights" :key="h">{{ h }}</li>
             </ul>
           </template>
@@ -86,7 +86,7 @@ function copyInstall(pkg) {
                 <p class="role">{{ r.role }}</p>
                 <span class="period">{{ r.period }}</span>
               </div>
-              <ul class="highlights">
+              <ul class="highlights list-arrow">
                 <li v-for="h in r.highlights" :key="h">{{ h }}</li>
               </ul>
             </div>
@@ -151,7 +151,7 @@ function copyInstall(pkg) {
               </div>
             </div>
             <p class="project-desc">{{ project.description }}</p>
-            <ul v-if="project.highlights && project.highlights.length" class="project-highlights">
+            <ul v-if="project.highlights && project.highlights.length" class="project-highlights list-arrow">
               <li v-for="h in project.highlights" :key="h">{{ h }}</li>
             </ul>
             <div v-if="project.tech && project.tech.length" class="project-tech">
@@ -183,23 +183,13 @@ function copyInstall(pkg) {
     <section id="research" class="section">
       <h2 class="section-title"><span class="symbol">📄</span> research & publications</h2>
       <p class="research-intro">{{ cv.research.intro }}</p>
-      <ul class="publications">
+      <ul class="publications list-diamond">
         <li v-for="(pub, i) in cv.research.publications" :key="i" class="pub-item">{{ pub }}</li>
       </ul>
     </section>
   </main>
 
-  <footer class="footer">
-    <section class="use-this no-print" aria-label="Use this theme">
-      <p class="use-this-label">Want this for your CV?</p>
-      <a :href="siteConfig.repoUrl" target="_blank" rel="noopener noreferrer" class="use-this-link">
-        Get the theme on GitHub
-        <span class="use-this-arrow" aria-hidden="true">→</span>
-      </a>
-    </section>
-    <p><code>echo "Thanks for reading! Let's build something."</code></p>
-    <p class="muted">Dimitris Chatzis · {{ new Date().getFullYear() }} · v{{ version }}</p>
-  </footer>
+  <CvFooter :version="version" />
 </template>
 
 <style scoped>
@@ -341,7 +331,7 @@ function copyInstall(pkg) {
   font-size: 0.95rem;
 }
 
-.highlights li::before {
+.list-arrow li::before {
   content: '→';
   position: absolute;
   left: 0;
@@ -573,14 +563,6 @@ function copyInstall(pkg) {
   line-height: 1.5;
 }
 
-.project-highlights li::before {
-  content: '→';
-  position: absolute;
-  left: 0;
-  color: var(--accent);
-  font-family: var(--font-mono);
-}
-
 .project-tech {
   display: flex;
   flex-wrap: wrap;
@@ -682,70 +664,10 @@ function copyInstall(pkg) {
   line-height: 1.5;
 }
 
-.pub-item::before {
+.list-diamond li::before {
   content: '▸';
   position: absolute;
   left: 0;
   color: var(--purple);
-}
-
-.footer {
-  margin-top: 3rem;
-  padding-top: 2rem;
-  border-top: 1px solid var(--border);
-  text-align: center;
-  font-family: var(--font-mono);
-  font-size: 0.9rem;
-  color: var(--text-muted);
-}
-
-.footer code {
-  color: var(--cyan);
-}
-
-.footer .muted {
-  margin-top: 0.75rem;
-  font-size: 0.8rem;
-  opacity: 0.8;
-}
-
-.use-this {
-  margin-bottom: 1.25rem;
-  padding: 1rem 1.25rem;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  text-align: center;
-}
-
-.use-this-label {
-  font-size: 0.9rem;
-  color: var(--text-muted);
-  margin: 0 0 0.5rem;
-}
-
-.use-this-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  font-family: var(--font-mono);
-  font-weight: 600;
-  font-size: 0.95rem;
-  color: var(--accent);
-  text-decoration: none;
-  transition: color 0.2s, opacity 0.2s;
-}
-
-.use-this-link:hover {
-  color: var(--accent-dim);
-  opacity: 0.9;
-}
-
-.use-this-arrow {
-  transition: transform 0.2s;
-}
-
-.use-this-link:hover .use-this-arrow {
-  transform: translateX(2px);
 }
 </style>
