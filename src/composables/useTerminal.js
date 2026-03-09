@@ -532,6 +532,63 @@ export function useTerminal(cv, appRefs, themeApi) {
     } else if (trimmed.startsWith('echo ')) {
       const rest = raw.replace(/^echo\s+/i, '').trim()
       out([line(rest || '(empty)')])
+    } else if (trimmed.startsWith('wget ')) {
+      const urlArg = raw.replace(/^wget\s+/i, '').trim().split(/\s+/)[0]
+      let hostname = 'dimchatzis.com'
+      let filename = 'index.html'
+      try {
+        const u = new URL(urlArg.startsWith('http') ? urlArg : 'https://' + urlArg)
+        hostname = u.hostname
+        const pathname = u.pathname || '/'
+        filename = pathname === '/' ? 'index.html' : pathname.replace(/^\//, '').split('/').pop() || 'index.html'
+      } catch (_) {}
+      const lastEntry = commandHistory.value[commandHistory.value.length - 1]
+      out([
+        line(`--${new Date().toISOString()}--  ${urlArg}`),
+        line(`Resolving ${hostname} (${hostname})... 127.0.0.1`),
+        line(`Connecting to ${hostname} (${hostname})|127.0.0.1|:443... connected.`),
+        line(`HTTP request sent, awaiting response... 200 OK`),
+        line(`Length: 4242 (4.1K) [application/octet-stream]`),
+        line(`Saving to: '${filename}'`),
+        line(''),
+      ])
+      let progress = 0
+      const wgetInterval = setInterval(() => {
+        progress += 4 + Math.floor(Math.random() * 6)
+        if (progress >= 100) {
+          clearInterval(wgetInterval)
+          lastEntry.output = [
+            line(`--${new Date().toISOString()}--  ${urlArg}`),
+            line(`Resolving ${hostname} (${hostname})... 127.0.0.1`),
+            line(`Connecting to ${hostname} (${hostname})|127.0.0.1|:443... connected.`),
+            line(`HTTP request sent, awaiting response... 200 OK`),
+            line(`Length: 4242 (4.1K) [application/octet-stream]`),
+            line(`Saving to: '${filename}'`),
+            line(''),
+            line(`${filename}           100%[====================] 4.14K  --.-KB/s   in 0s`),
+            line(''),
+            line('2025-01-01 12:00:00 (4.14 KB/s) - ‘' + filename + '’ saved [4242/4242]'),
+            line(''),
+            line('(Just kidding — run npm run coffee to say hi ☕)'),
+          ]
+          nextTick(scrollTerminalToBottom)
+          return
+        }
+        const filled = Math.floor((progress / 100) * 20)
+        const bar = '='.repeat(filled) + '>' + ' '.repeat(19 - filled)
+        const speed = (1.2 + Math.random() * 1.5).toFixed(2)
+        lastEntry.output = [
+          line(`--${new Date().toISOString()}--  ${urlArg}`),
+          line(`Resolving ${hostname} (${hostname})... 127.0.0.1`),
+          line(`Connecting to ${hostname} (${hostname})|127.0.0.1|:443... connected.`),
+          line(`HTTP request sent, awaiting response... 200 OK`),
+          line(`Length: 4242 (4.1K) [application/octet-stream]`),
+          line(`Saving to: '${filename}'`),
+          line(''),
+          line(`${filename}         ${String(progress).padStart(3)}%[${bar}] ${(4.14 * progress / 100).toFixed(2)}K  ${speed}KB/s  in 0s`),
+        ]
+        nextTick(scrollTerminalToBottom)
+      }, 120)
     } else if (trimmed === 'coffee') {
       out([
         line('Brewing... ☕'),

@@ -23,6 +23,7 @@ export const HELP_TEXT = [
   '  npm run coffee  — ☕ Say hi (opens email)',
   '  ls             — 📁 List files',
   '  echo <text>    — 📢 Echo text back',
+  '  wget <url>     — 📥 Fake download with progress bar',
   '  duck           — 🦆 Rubber duck debugging (tell it your bug)',
   '  coffee         — ☕ Brew a virtual coffee',
   '  clear          — 🧹 Clear terminal',
@@ -39,7 +40,7 @@ export const HELP_TEXT = [
 
 export const TAB_COMMANDS = [
   'cat about.txt', 'play snake', 'build something', 'calculator', 'notepad', 'typing', 'encoder', 'qr', 'pomodoro', 'color', 'stopwatch', 'password',
-  'duck', 'whoami', 'version', 'date', 'fortune', 'neofetch', 'ls', 'echo ', 'coffee', 'clear', 'weather', 'theme', 'theme light', 'theme dark',
+  'duck', 'whoami', 'version', 'date', 'fortune', 'neofetch', 'ls', 'echo ', 'wget ', 'coffee', 'clear', 'weather', 'theme', 'theme light', 'theme dark',
   'curl https://dimchatzis.com/api/me', 'npm install dimchatzis', 'npm run coffee',
   'help', 'help ', 'man ', 'which ', 'history', 'cd', 'cd ..', 'cd ~', 'cd /', 'pwd',
   'projects', 'projects --filter npm', 'projects --filter wordpress', 'projects --filter composer', 'projects --filter rust', 'projects --filter web',
@@ -70,6 +71,7 @@ export const COMMANDS = [
   { name: 'npm run coffee', aliases: ['npm run coffee'], path: '/usr/lib/node_modules/dimchatzis/scripts/coffee', helpLine: '  npm run coffee  — ☕ Say hi (opens email)' },
   { name: 'ls', aliases: ['ls', 'dir'], path: '/usr/bin/ls', helpLine: '  ls             — 📁 List files' },
   { name: 'echo', aliases: ['echo'], path: '/usr/bin/echo', helpLine: '  echo <text>    — 📢 Echo text back' },
+  { name: 'wget', aliases: ['wget'], path: '/usr/bin/wget', helpLine: '  wget <url>     — 📥 Fake download with progress bar' },
   { name: 'duck', aliases: ['duck', 'rubberduck', 'rubber duck'], path: '/usr/bin/rubberduck.exe', helpLine: '  duck           — 🦆 Rubber duck debugging (tell it your bug)' },
   { name: 'coffee', aliases: ['coffee'], path: '/usr/bin/coffee.sh', helpLine: '  coffee         — ☕ Brew a virtual coffee' },
   { name: 'clear', aliases: ['clear'], path: 'builtin', helpLine: '  clear          — 🧹 Clear terminal' },
@@ -107,6 +109,7 @@ export const MAN_PAGES = {
   'npm run coffee': ['NAME', '       npm run coffee - open mail client', '', 'SYNOPSIS', '       npm run coffee', '', 'DESCRIPTION', '       Opens your mail client to send a message.', ''],
   'ls': ['NAME', '       ls - list files', '', 'SYNOPSIS', '       ls', '       dir', '', 'DESCRIPTION', '       Lists virtual files and apps in this terminal.', ''],
   'echo': ['NAME', '       echo - echo text', '', 'SYNOPSIS', '       echo <text>', '', 'DESCRIPTION', '       Prints the given text.', ''],
+  'wget': ['NAME', '       wget - (fake) retrieve files via HTTP', '', 'SYNOPSIS', '       wget <url>', '', 'DESCRIPTION', '       Simulates a download with progress bar. Does not actually download.', '       Run npm run coffee to say hi instead.', ''],
   'duck': ['NAME', '       duck - rubber duck debugging', '', 'SYNOPSIS', '       duck', '       rubberduck', '', 'DESCRIPTION', '       Opens a rubber duck. Explain your bug to it. It won\'t judge.', '       (It might quack.) Based on the time-honoured practice of', '       rubber duck debugging: the act of explaining your code', '       to an inanimate object until the solution appears.', ''],
   'coffee': ['NAME', '       coffee - brew virtual coffee', '', 'SYNOPSIS', '       coffee', '', 'DESCRIPTION', '       Brews a virtual coffee (may run out of beans).', ''],
   'clear': ['NAME', '       clear - clear terminal', '', 'SYNOPSIS', '       clear', '', 'DESCRIPTION', '       Clears the terminal screen and history.', ''],
