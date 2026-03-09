@@ -600,17 +600,18 @@ export function useTerminal(cv, appRefs, themeApi) {
         line(''),
       ])
     } else if (trimmed === 'projects' || trimmed.startsWith('projects ')) {
-      const filterMatch = trimmed.match(/projects\s+--filter\s+(npm|wordpress)/)
+      const filterMatch = trimmed.match(/projects\s+--filter\s+(npm|wordpress|composer|rust|web)/)
       const filter = filterMatch ? filterMatch[1] : 'all'
       appRefs.projectFilter.value = filter
       nextTick(() => {
         const el = mainRef.value?.querySelector?.('#projects')
         if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
       })
+      const filterLabels = { npm: 'NPM', wordpress: 'WordPress', composer: 'Composer', rust: 'Rust', web: 'Web' }
       const projects = (cv.projects || []).filter((p) => filter === 'all' || p.type === filter)
       const lines = projects.length
         ? [
-            line(`${filter === 'all' ? 'All' : filter === 'npm' ? 'NPM' : 'WordPress'} projects (${projects.length}):`),
+            line(`${filter === 'all' ? 'All' : filterLabels[filter] || filter} projects (${projects.length}):`),
             ...projects.map((p) => line(`  • ${p.title} [${p.type}] — ${p.repo}`)),
             line(''),
             line('→ Scrolled to projects section.'),

@@ -21,26 +21,32 @@ const filterTabs = [
   { value: 'all', label: 'All' },
   { value: 'npm', label: 'NPM' },
   { value: 'wordpress', label: 'WordPress' },
+  { value: 'composer', label: 'Composer' },
+  { value: 'rust', label: 'Rust' },
+  { value: 'web', label: 'Web' },
 ]
 
 const projectGroups = computed(() => {
-  const groups = { npm: [], wordpress: [] }
+  const groups = { npm: [], wordpress: [], composer: [], rust: [], web: [] }
   for (const p of props.cv.projects || []) {
-    if (p.type === 'npm') groups.npm.push(p)
-    else if (p.type === 'wordpress') groups.wordpress.push(p)
+    if (groups[p.type]) groups[p.type].push(p)
   }
   const all = [
     { key: 'npm', label: 'NPM packages', projects: groups.npm },
     { key: 'wordpress', label: 'WordPress plugins', projects: groups.wordpress },
+    { key: 'composer', label: 'Composer packages', projects: groups.composer },
+    { key: 'rust', label: 'Rust crates', projects: groups.rust },
+    { key: 'web', label: 'Web projects', projects: groups.web },
   ].filter((g) => g.projects.length > 0)
   if (props.projectFilter === 'all') return all
   return all.filter((g) => g.key === props.projectFilter)
 })
 
-function copyInstall(pkg) {
-  const text = `npm i ${pkg}`
+function copyInstall(project) {
+  const text = project.installCommand ?? `npm i ${project.install}`
+  const copyId = project.installCommand ?? project.install
   navigator.clipboard?.writeText(text).then(() => {
-    const el = document.querySelector(`[data-copy-for="${pkg}"]`)
+    const el = document.querySelector(`[data-copy-for="${copyId}"]`)
     if (el) {
       const prev = el.textContent
       el.textContent = 'Copied!'
@@ -157,13 +163,13 @@ function copyInstall(pkg) {
             <div v-if="project.tech && project.tech.length" class="project-tech">
               <span v-for="t in project.tech" :key="t" class="project-tech-tag">{{ t }}</span>
             </div>
-            <div v-if="project.install" class="project-install">
-              <code class="project-install-code">npm i {{ project.install }}</code>
+            <div v-if="project.install || project.installCommand" class="project-install">
+              <code class="project-install-code">{{ project.installCommand ?? `npm i ${project.install}` }}</code>
               <button
                 type="button"
                 class="project-install-copy"
-                :data-copy-for="project.install"
-                @click="copyInstall(project.install)"
+                :data-copy-for="project.installCommand ?? project.install"
+                @click="copyInstall(project)"
                 aria-label="Copy install command"
               >Copy</button>
             </div>
@@ -173,6 +179,9 @@ function copyInstall(pkg) {
               </a>
               <a v-if="project.npm" :href="project.npm" target="_blank" rel="noopener noreferrer" class="project-link">
                 npm<span class="project-link-icon" aria-hidden="true">↗</span>
+              </a>
+              <a v-else-if="project.packageUrl" :href="project.packageUrl" target="_blank" rel="noopener noreferrer" class="project-link">
+                {{ project.packageLabel || 'Package' }}<span class="project-link-icon" aria-hidden="true">↗</span>
               </a>
             </div>
           </article>
@@ -539,6 +548,24 @@ function copyInstall(pkg) {
   background: rgba(33, 117, 155, 0.2);
   color: #21749b;
   border: 1px solid rgba(33, 117, 155, 0.4);
+}
+
+.project-badge--composer {
+  background: rgba(255, 152, 0, 0.2);
+  color: #f57c00;
+  border: 1px solid rgba(255, 152, 0, 0.4);
+}
+
+.project-badge--rust {
+  background: rgba(222, 165, 132, 0.25);
+  color: #ce422b;
+  border: 1px solid rgba(222, 165, 132, 0.5);
+}
+
+.project-badge--web {
+  background: rgba(65, 184, 131, 0.2);
+  color: #41b883;
+  border: 1px solid rgba(65, 184, 131, 0.4);
 }
 
 .project-desc {

@@ -34,7 +34,7 @@ export const HELP_TEXT = [
   '  ↑/↓            — Command history',
   '  Tab            — Complete command',
   '  help [filter]  — Show help (optional filter)',
-  '  projects [--filter npm|wordpress] — 📦 Show projects, scroll to section, filter by type',
+  '  projects [--filter npm|wordpress|composer|rust|web] — 📦 Show projects, scroll to section, filter by type',
 ]
 
 export const TAB_COMMANDS = [
@@ -42,7 +42,7 @@ export const TAB_COMMANDS = [
   'duck', 'whoami', 'version', 'date', 'fortune', 'neofetch', 'ls', 'echo ', 'coffee', 'clear', 'weather', 'theme', 'theme light', 'theme dark',
   'curl https://dimchatzis.com/api/me', 'npm install dimchatzis', 'npm run coffee',
   'help', 'help ', 'man ', 'which ', 'history', 'cd', 'cd ..', 'cd ~', 'cd /', 'pwd',
-  'projects', 'projects --filter npm', 'projects --filter wordpress',
+  'projects', 'projects --filter npm', 'projects --filter wordpress', 'projects --filter composer', 'projects --filter rust', 'projects --filter web',
 ]
 
 export const COMMANDS = [
@@ -79,7 +79,7 @@ export const COMMANDS = [
   { name: 'man', aliases: ['man'], path: '/usr/bin/man', helpLine: '  man <cmd>      — 📖 Manual page for a command' },
   { name: 'which', aliases: ['which', 'whereis'], path: 'builtin', helpLine: '  which <cmd>    — 🔍 Path of a command' },
   { name: 'history', aliases: ['history'], path: 'builtin', helpLine: '  history        — 📜 List previous commands' },
-  { name: 'projects', aliases: ['projects', 'projects --filter npm', 'projects --filter wordpress'], path: 'builtin', helpLine: '  projects [--filter npm|wordpress] — 📦 Show projects, scroll to section, filter by type' },
+  { name: 'projects', aliases: ['projects', 'projects --filter npm', 'projects --filter wordpress', 'projects --filter composer', 'projects --filter rust', 'projects --filter web'], path: 'builtin', helpLine: '  projects [--filter npm|wordpress|composer|rust|web] — 📦 Show projects, scroll to section, filter by type' },
 ]
 
 export const MAN_PAGES = {
@@ -116,7 +116,7 @@ export const MAN_PAGES = {
   'man': ['NAME', '       man - display manual pages', '', 'SYNOPSIS', '       man <command>', '', 'DESCRIPTION', '       Displays the manual page for the given command.', ''],
   'which': ['NAME', '       which - locate a command', '', 'SYNOPSIS', '       which <command>', '       whereis <command>', '', 'DESCRIPTION', '       Prints the path of the given command.', ''],
   'history': ['NAME', '       history - list command history', '', 'SYNOPSIS', '       history [n]', '       !n', '', 'DESCRIPTION', '       Lists the last 50 commands. Use !n to re-run the nth command.', ''],
-  'projects': ['NAME', '       projects - show open source projects', '', 'SYNOPSIS', '       projects', '       projects --filter npm', '       projects --filter wordpress', '', 'DESCRIPTION', '       Scrolls to the projects section and optionally filters by type.', '       With no filter, shows all projects. Use --filter npm or --filter wordpress', '       to filter NPM packages or WordPress plugins.', ''],
+  'projects': ['NAME', '       projects - show open source projects', '', 'SYNOPSIS', '       projects', '       projects --filter npm', '       projects --filter wordpress', '       projects --filter composer', '       projects --filter rust', '       projects --filter web', '', 'DESCRIPTION', '       Scrolls to the projects section and optionally filters by type.', '       With no filter, shows all projects. Use --filter to filter by:', '       npm (NPM packages), wordpress (WordPress plugins), composer (Composer packages),', '       rust (Rust crates), or web (web projects).', ''],
 }
 
 export const FORTUNES = [
