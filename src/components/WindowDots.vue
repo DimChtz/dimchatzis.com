@@ -17,7 +17,7 @@ defineProps({
 .window-dots {
   display: inline-flex;
   align-items: center;
-  gap: 0;
+  gap: 6px;
 }
 
 .window-dot {

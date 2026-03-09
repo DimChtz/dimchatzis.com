@@ -1,11 +1,14 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted, watch, nextTick, defineAsyncComponent } from 'vue'
 import { cv } from './data/cv'
+import { siteConfig } from './config/site'
 import { shouldShowPlayPrompt } from './utils/playPromptStorage'
+import { shouldSkipBootSequence } from './utils/bootSkipStorage'
 import { useTheme, THEME_KEY } from './composables/useTheme'
 import { useTerminal } from './composables/useTerminal'
 import { MODAL_KEYS } from './constants/modalKeys'
 import PlayPromptModal from './components/PlayPromptModal.vue'
+import BootSequence from './components/BootSequence.vue'
 import TerminalHero from './components/TerminalHero.vue'
 import CvMain from './components/CvMain.vue'
 import CvSidebar from './components/CvSidebar.vue'
@@ -88,6 +91,24 @@ const highlightedProjects = computed(() =>
   (cv.projects || []).filter((p) => p.highlighted === true)
 )
 
+const bootComplete = ref(shouldSkipBootSequence())
+const bootSequenceRef = ref(null)
+
+function onBootDone() {
+  bootComplete.value = true
+  setTimeout(terminal.typeNextChar, 400)
+}
+
+const siteNameForBoot = computed(() => {
+  try {
+    if (siteConfig.repoUrl) {
+      const u = new URL(siteConfig.repoUrl)
+      return u.hostname.replace(/^www\./, '') || 'dimchatzis.com'
+    }
+  } catch (_) {}
+  return 'dimchatzis.com'
+})
+
 onMounted(() => {
   const saved = localStorage.getItem(THEME_KEY)
   if (saved === 'light' || saved === 'dark') applyTheme(saved)
@@ -95,7 +116,9 @@ onMounted(() => {
   if (shouldShowPlayPrompt()) {
     showPlayPrompt.value = true
   }
-  setTimeout(terminal.typeNextChar, 500)
+  if (bootComplete.value) {
+    setTimeout(terminal.typeNextChar, 500)
+  }
   document.addEventListener('fullscreenchange', terminal.onFullscreenChange)
 })
 onUnmounted(() => {
@@ -105,6 +128,12 @@ onUnmounted(() => {
 
 <template>
   <div class="cv-page">
+    <BootSequence
+      v-if="!bootComplete"
+      ref="bootSequenceRef"
+      :site-name="siteNameForBoot"
+      @done="onBootDone"
+    />
     <a href="#main-content" class="skip-link no-print" @click.prevent="focusMainContent">Skip to CV</a>
     <CvSidebar :cv="cv" :nav-items="navItems" :highlighted-projects="highlightedProjects" />
     <div class="cv-page__content">
