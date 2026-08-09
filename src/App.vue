@@ -12,9 +12,11 @@ import BootSequence from './components/BootSequence.vue'
 import TerminalHero from './components/TerminalHero.vue'
 import CvMain from './components/CvMain.vue'
 import CvSidebar from './components/CvSidebar.vue'
+import { DomInspector } from '../dom-inspector'
 import PerformanceMetrics from './components/PerformanceMetrics.vue'
 
 const BuildSomethingGame = defineAsyncComponent(() => import('./components/BuildSomethingGame.vue'))
+const CssVariablesPlayground = defineAsyncComponent(() => import('./components/CssVariablesPlayground.vue'))
 const SnakeGame = defineAsyncComponent(() => import('./components/SnakeGame.vue'))
 const Calculator = defineAsyncComponent(() => import('./components/Calculator.vue'))
 const Notepad = defineAsyncComponent(() => import('./components/Notepad.vue'))
@@ -28,16 +30,19 @@ const PasswordGenerator = defineAsyncComponent(() => import('./components/Passwo
 const RubberDuck = defineAsyncComponent(() => import('./components/RubberDuck.vue'))
 
 const projectFilter = ref('all')
+const inspectorActive = ref(false)
 const modalRefsByKey = Object.fromEntries(MODAL_KEYS.map((k) => [k, ref(false)]))
 const appRefs = {
   ...modalRefsByKey,
   projectFilter,
+  inspectorActive,
 }
 const modalRefs = MODAL_KEYS.map((k) => modalRefsByKey[k])
 
 const {
   showPlayPrompt,
   buildGameOpen,
+  cssPlaygroundOpen,
   gameOpen,
   calculatorOpen,
   notepadOpen,
@@ -149,6 +154,7 @@ onUnmounted(() => {
 
     <PlayPromptModal v-model:show="showPlayPrompt" @play="onPlayPrompt" />
     <BuildSomethingGame v-model:show="buildGameOpen" />
+    <CssVariablesPlayground v-model:show="cssPlaygroundOpen" />
     <SnakeGame v-model:show="gameOpen" />
     <Calculator v-model:show="calculatorOpen" />
     <Notepad v-model:show="notepadOpen" />
@@ -160,6 +166,9 @@ onUnmounted(() => {
     <Stopwatch v-model:show="stopwatchOpen" />
     <PasswordGenerator v-model:show="passwordOpen" />
     <RubberDuck v-model:show="duckOpen" />
+    <div class="no-print">
+      <DomInspector v-model:active="inspectorActive" />
+    </div>
     <PerformanceMetrics />
   </div>
 </template>
