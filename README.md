@@ -11,6 +11,7 @@ A terminal-inspired CV site built with **Vue 3** and **Vite**. Type commands in 
 - **Theme** — Light/dark toggle, persisted in localStorage.
 - **Print** — Download CV as PDF, print-friendly layout.
 - **API** — `curl api/me` returns CV as JSON.
+- **Analytics** — Optional Google Analytics, off by default and gated behind a cookie consent banner.
 
 ## Use this template
 
@@ -18,21 +19,33 @@ A terminal-inspired CV site built with **Vue 3** and **Vite**. Type commands in 
 2. Edit `src/data/cv.js` — name, title, experience, education, skills, links, etc.
 3. Edit `src/config/site.js` — set `repoUrl` to your GitHub repo (or remove the "Get the theme" links).
 4. Optional: Add your PDF to `public/cv/` and update the link in `TerminalHero.vue` if needed.
-5. Build and deploy.
+5. Optional: Set `VITE_GA_ID` in `.env` if you want Google Analytics (see [Analytics](#analytics) below).
+6. Build and deploy.
 
 ## Project structure
 
 ```
 src/
 ├── components/     # Vue components (TerminalHero, CvMain, modals, games, tools)
-├── composables/    # useTerminal, useTheme
+├── composables/    # useTerminal, useTheme, useCookieConsent
 ├── config/        # site.js (repo URL)
 ├── data/          # cv.js, terminalCommands.js
-├── utils/         # version, playPromptStorage
+├── utils/         # version, playPromptStorage, analytics
 └── style.css      # Global styles, CSS variables
 scripts/
 └── deploy.js      # SFTP deploy
 ```
+
+## Analytics
+
+Google Analytics is opt-in and only wired up if you provide an ID:
+
+1. Copy `.env.example` to `.env`.
+2. Set `VITE_GA_ID` to your GA4 measurement ID (e.g. `G-XXXXXXXXXX`).
+
+`.env` is gitignored, so your ID never gets committed — each fork sets its own. Leave `VITE_GA_ID` unset to ship with no analytics and no cookie banner at all.
+
+When an ID is set, a cookie consent banner (`src/components/CookieConsentBanner.vue`) is shown on first visit and the `gtag.js` script is only injected after the visitor accepts (`src/composables/useCookieConsent.js`, `src/utils/analytics.js`). The choice is remembered in localStorage and can be changed anytime via the "Cookie preferences" link in the footer.
 
 ## Development
 
