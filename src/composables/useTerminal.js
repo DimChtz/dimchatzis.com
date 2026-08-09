@@ -132,7 +132,9 @@ export function useTerminal(cv, appRefs, themeApi) {
   }
 
   const isModalOpen = computed(() =>
-    Object.entries(appRefs).some(([key, ref]) => key !== 'projectFilter' && ref?.value)
+    Object.entries(appRefs).some(([key, ref]) =>
+      key !== 'projectFilter' && key !== 'inspectorActive' && ref?.value
+    )
   )
 
   function formatPromptPath(path) {
@@ -470,6 +472,13 @@ export function useTerminal(cv, appRefs, themeApi) {
     } else if (trimmed === 'color' || trimmed === 'color picker' || trimmed === 'picker') {
       appRefs.colorPickerOpen.value = true
       out([line('→ Opening color-picker...')])
+    } else if (trimmed === 'css' || trimmed === 'css vars' || trimmed === 'variables') {
+      appRefs.cssPlaygroundOpen.value = true
+      out([line('→ Opening css-vars.exe...')])
+    } else if (trimmed === 'inspect' || trimmed === 'inspector' || trimmed === 'dom') {
+      appRefs.inspectorActive.value = !appRefs.inspectorActive.value
+      const shortcut = /Mac|iPod|iPhone|iPad/.test(navigator.platform) ? '⌘+Alt+I' : 'Ctrl+Alt+I'
+      out([line('→ DOM inspector ' + (appRefs.inspectorActive.value ? 'on. Hover to inspect, click to pin. ' + shortcut + ' to toggle.' : 'off.') + '')])
     } else if (trimmed === 'stopwatch') {
       appRefs.stopwatchOpen.value = true
       out([line('→ Opening stopwatch...')])

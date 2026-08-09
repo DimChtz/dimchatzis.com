@@ -1,0 +1,36 @@
+{
+  "name": "vue-dom-inspector",
+  "version": "0.2.0",
+  "description": "DevTools-style DOM inspector for Vue 3. Hover to inspect, pin for full panel, selector test, quick actions.",
+  "type": "module",
+  "main": "index.js",
+  "module": "index.js",
+  "exports": {
+    ".": "./index.js"
+  },
+  "files": [
+    "dist",
+    "index.js",
+    "src"
+  ],
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite build --watch"
+  },
+  "peerDependencies": {
+    "vue": "^3.0.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.4",
+    "vite": "^5.2.8"
+  },
+  "keywords": [
+    "vue",
+    "vue3",
+    "dom",
+    "inspector",
+    "devtools",
+    "debug"
+  ],
+  "license": "MIT"
+}

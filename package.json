@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:lib": "cd dom-inspector && npm run build",
+    "build:with-lib": "npm run build:lib && vite build",
     "preview": "vite preview",
     "deploy": "npm run build && node scripts/deploy.js"
   },
