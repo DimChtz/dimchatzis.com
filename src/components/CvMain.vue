@@ -142,11 +142,12 @@ function copyInstall(project) {
       </div>
       <div v-for="group in projectGroups" :key="group.key" class="project-group">
         <h3 class="project-group-title">{{ group.label }}</h3>
-        <div class="project-cards">
+        <div class="project-bento">
           <article
             v-for="(project, i) in group.projects"
             :key="project.repo"
-            class="project-card"
+            class="project-card project-bento-item"
+            :class="{ 'project-bento-item--large': project.highlighted || i % 4 === 0 }"
             :style="{ animationDelay: `${i * 0.08}s` }"
           >
             <div class="project-header">
@@ -475,10 +476,26 @@ function copyInstall(project) {
   border-bottom: 1px solid var(--border);
 }
 
-.project-cards {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
+.project-bento {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1rem;
+  grid-auto-rows: minmax(140px, auto);
+}
+
+.project-bento-item {
+  grid-row: span 1;
+  grid-column: span 1;
+}
+
+.project-bento-item--large {
+  grid-row: span 2;
+}
+
+@media (min-width: 640px) {
+  .project-bento-item--large {
+    grid-column: span 1;
+  }
 }
 
 .project-card {
@@ -488,10 +505,20 @@ function copyInstall(project) {
   padding: 1.25rem 1.5rem;
   transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
   animation: cardIn 0.5s ease backwards;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
 }
 
 .project-card:hover {
   border-color: var(--accent-dim);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.project-card .project-desc {
+  flex: 1;
 }
 
 .project-header {
