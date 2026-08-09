@@ -19,7 +19,7 @@ function persistConsent(value) {
 }
 
 const consent = ref(readConsent())
-const bannerOpen = ref(consent.value !== 'granted' && consent.value !== 'denied')
+const bannerOpen = ref(false)
 
 if (consent.value === 'granted') {
   loadGoogleAnalytics()
@@ -48,5 +48,12 @@ export function useCookieConsent() {
     bannerOpen.value = false
   }
 
-  return { consent, bannerOpen, acceptAnalytics, declineAnalytics, openPreferences, closePreferences }
+  /** Reveal the banner if the visitor hasn't made a choice yet. Call once it's safe to show (e.g. after boot). */
+  function maybeOpenBanner() {
+    if (consent.value !== 'granted' && consent.value !== 'denied') {
+      bannerOpen.value = true
+    }
+  }
+
+  return { consent, bannerOpen, acceptAnalytics, declineAnalytics, openPreferences, closePreferences, maybeOpenBanner }
 }

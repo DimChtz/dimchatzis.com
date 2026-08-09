@@ -56,7 +56,7 @@ const {
 
 const { theme, applyTheme, toggleTheme } = useTheme()
 const terminal = useTerminal(cv, appRefs, { theme, applyTheme, toggleTheme })
-const { bannerOpen: cookieBannerOpen } = useCookieConsent()
+const { bannerOpen: cookieBannerOpen, maybeOpenBanner } = useCookieConsent()
 
 watch([terminal.terminalLines, terminal.commandHistory], () => terminal.scrollTerminalToBottom(), { deep: true })
 
@@ -96,11 +96,34 @@ const highlightedProjects = computed(() =>
   (cv.projects || []).filter((p) => p.highlighted === true)
 )
 
-const bootComplete = ref(shouldSkipBootSequence())
+const bootComplete = ref(!siteConfig.bootSequenceEnabled || shouldSkipBootSequence())
 const bootSequenceRef = ref(null)
+
+function maybeShowPlayPrompt() {
+  if (!shouldShowPlayPrompt()) return
+  // Don't stack the play prompt on top of the cookie banner — let consent resolve first.
+  if (hasAnalyticsId() && cookieBannerOpen.value) {
+    const stopWatchingBanner = watch(cookieBannerOpen, (open) => {
+      if (!open) {
+        stopWatchingBanner()
+        showPlayPrompt.value = true
+      }
+    })
+  } else {
+    showPlayPrompt.value = true
+  }
+}
+
+function revealPostBootPrompts() {
+  // The boot sequence sits above everything else — wait for it to finish
+  // before opening any prompt, instead of opening it hidden underneath.
+  maybeOpenBanner()
+  maybeShowPlayPrompt()
+}
 
 function onBootDone() {
   bootComplete.value = true
+  revealPostBootPrompts()
   setTimeout(terminal.typeNextChar, 400)
 }
 
@@ -118,20 +141,8 @@ onMounted(() => {
   const saved = localStorage.getItem(THEME_KEY)
   if (saved === 'light' || saved === 'dark') applyTheme(saved)
   else document.documentElement.setAttribute('data-theme', 'dark')
-  if (shouldShowPlayPrompt()) {
-    // Don't stack the play prompt on top of the cookie banner — let consent resolve first.
-    if (hasAnalyticsId() && cookieBannerOpen.value) {
-      const stopWatchingBanner = watch(cookieBannerOpen, (open) => {
-        if (!open) {
-          showPlayPrompt.value = true
-          stopWatchingBanner()
-        }
-      })
-    } else {
-      showPlayPrompt.value = true
-    }
-  }
   if (bootComplete.value) {
+    revealPostBootPrompts()
     setTimeout(terminal.typeNextChar, 500)
   }
   document.addEventListener('fullscreenchange', terminal.onFullscreenChange)
@@ -144,7 +155,7 @@ onUnmounted(() => {
 <template>
   <div class="cv-page">
     <BootSequence
-      v-if="!bootComplete"
+      v-if="siteConfig.bootSequenceEnabled && !bootComplete"
       ref="bootSequenceRef"
       :site-name="siteNameForBoot"
       @done="onBootDone"

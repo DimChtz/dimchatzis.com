@@ -17,7 +17,7 @@ A terminal-inspired CV site built with **Vue 3** and **Vite**. Type commands in 
 
 1. **Fork** this repo (or use as template).
 2. Edit `src/data/cv.js` — name, title, experience, education, skills, links, etc.
-3. Edit `src/config/site.js` — set `repoUrl` to your GitHub repo (or remove the "Get the theme" links).
+3. Edit `src/config/site.js` — set `repoUrl` to your GitHub repo (or remove the "Get the theme" links), and set `bootSequenceEnabled: false` if you'd rather skip the BIOS boot animation.
 4. Optional: Add your PDF to `public/cv/` and update the link in `TerminalHero.vue` if needed.
 5. Optional: Set `VITE_GA_ID` in `.env` if you want Google Analytics (see [Analytics](#analytics) below).
 6. Build and deploy.
