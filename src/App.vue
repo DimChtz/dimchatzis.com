@@ -12,6 +12,7 @@ import BootSequence from './components/BootSequence.vue'
 import TerminalHero from './components/TerminalHero.vue'
 import CvMain from './components/CvMain.vue'
 import CvSidebar from './components/CvSidebar.vue'
+import PerformanceMetrics from './components/PerformanceMetrics.vue'
 
 const BuildSomethingGame = defineAsyncComponent(() => import('./components/BuildSomethingGame.vue'))
 const SnakeGame = defineAsyncComponent(() => import('./components/SnakeGame.vue'))
@@ -159,6 +160,7 @@ onUnmounted(() => {
     <Stopwatch v-model:show="stopwatchOpen" />
     <PasswordGenerator v-model:show="passwordOpen" />
     <RubberDuck v-model:show="duckOpen" />
+    <PerformanceMetrics />
   </div>
 </template>
 
