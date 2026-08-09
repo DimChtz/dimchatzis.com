@@ -6,8 +6,11 @@ import { shouldShowPlayPrompt } from './utils/playPromptStorage'
 import { shouldSkipBootSequence } from './utils/bootSkipStorage'
 import { useTheme, THEME_KEY } from './composables/useTheme'
 import { useTerminal } from './composables/useTerminal'
+import { useCookieConsent } from './composables/useCookieConsent'
+import { hasAnalyticsId } from './utils/analytics'
 import { MODAL_KEYS } from './constants/modalKeys'
 import PlayPromptModal from './components/PlayPromptModal.vue'
+import CookieConsentBanner from './components/CookieConsentBanner.vue'
 import BootSequence from './components/BootSequence.vue'
 import TerminalHero from './components/TerminalHero.vue'
 import CvMain from './components/CvMain.vue'
@@ -53,6 +56,7 @@ const {
 
 const { theme, applyTheme, toggleTheme } = useTheme()
 const terminal = useTerminal(cv, appRefs, { theme, applyTheme, toggleTheme })
+const { bannerOpen: cookieBannerOpen } = useCookieConsent()
 
 watch([terminal.terminalLines, terminal.commandHistory], () => terminal.scrollTerminalToBottom(), { deep: true })
 
@@ -115,7 +119,17 @@ onMounted(() => {
   if (saved === 'light' || saved === 'dark') applyTheme(saved)
   else document.documentElement.setAttribute('data-theme', 'dark')
   if (shouldShowPlayPrompt()) {
-    showPlayPrompt.value = true
+    // Don't stack the play prompt on top of the cookie banner — let consent resolve first.
+    if (hasAnalyticsId() && cookieBannerOpen.value) {
+      const stopWatchingBanner = watch(cookieBannerOpen, (open) => {
+        if (!open) {
+          showPlayPrompt.value = true
+          stopWatchingBanner()
+        }
+      })
+    } else {
+      showPlayPrompt.value = true
+    }
   }
   if (bootComplete.value) {
     setTimeout(terminal.typeNextChar, 500)
@@ -148,6 +162,7 @@ onUnmounted(() => {
     </div>
 
     <PlayPromptModal v-model:show="showPlayPrompt" @play="onPlayPrompt" />
+    <CookieConsentBanner />
     <BuildSomethingGame v-model:show="buildGameOpen" />
     <SnakeGame v-model:show="gameOpen" />
     <Calculator v-model:show="calculatorOpen" />
