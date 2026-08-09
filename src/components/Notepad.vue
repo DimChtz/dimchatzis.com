@@ -135,14 +135,17 @@ function close() {
           </div>
           <div class="app-tabs-wrap">
             <div class="app-tabs">
-              <button
+              <div
                 v-for="tab in tabs"
                 :key="tab.id"
-                type="button"
+                role="button"
+                tabindex="0"
                 class="app-tab"
                 :class="{ active: tab.id === activeId }"
                 :title="tabTitle(tab)"
                 @click="selectTab(tab.id)"
+                @keydown.enter="selectTab(tab.id)"
+                @keydown.space.prevent="selectTab(tab.id)"
               >
                 <span class="app-tab-label">{{ tabTitle(tab) }}</span>
                 <button
@@ -151,7 +154,7 @@ function close() {
                   aria-label="Close tab"
                   @click="closeTab(tab.id, $event)"
                 >×</button>
-              </button>
+              </div>
               <button type="button" class="app-tab-add" aria-label="New tab" @click="addTab">+</button>
             </div>
           </div>
